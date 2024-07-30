@@ -44,7 +44,7 @@ void InitListener(SKSE::MessagingInterface::Message* a_msg)
     }
 }
 
-extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface * a_skse)
+SKSEPluginLoad(const SKSE::LoadInterface* a_skse)
 {
     InitializeLogging();
     SKSE::Init(a_skse);
