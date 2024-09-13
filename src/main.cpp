@@ -36,7 +36,9 @@ void InitListener(SKSE::MessagingInterface::Message* a_msg)
     case SKSE::MessagingInterface::kNewGame:
     case SKSE::MessagingInterface::kDataLoaded:
         Settings::GetSingleton()->LoadSettings();
-        Events::OnFastTravelEndEventHandler::Register();
+        if (!REL::Module::IsVR()) {
+            Events::OnFastTravelEndEventHandler::Register();
+        }
         Events::OnMenuCloseHandler::Register();
         break;
     case SKSE::MessagingInterface::kPostLoadGame:
@@ -46,8 +48,16 @@ void InitListener(SKSE::MessagingInterface::Message* a_msg)
 
 SKSEPluginLoad(const SKSE::LoadInterface* a_skse)
 {
+#ifndef NDEBUG
+    while (!REX::W32::IsDebuggerPresent()) {};
+#endif
     InitializeLogging();
     SKSE::Init(a_skse);
+
+    if (REL::Module::IsVR())
+	{
+		REL::IDDatabase::get().IsVRAddressLibraryAtLeastVersion("0.152.0", true);
+	}
 
     auto pluginDec = SKSE::PluginDeclaration::GetSingleton();
 

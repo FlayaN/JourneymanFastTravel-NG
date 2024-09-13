@@ -20,7 +20,7 @@ namespace Events
 			}
 
 			auto settings = Settings::GetSingleton();
-			if (settings->EnableOnlyOnSM == true && settings->Survival_ModeEnabledShared->value == 0.0f) {
+			if (settings->EnableOnlyOnSM == true && settings->Survival_ModeEnabledShared == 0.0f) {
 				settings->menuFastTravel = false;
 				return RE::BSEventNotifyControl::kContinue;
 			}
@@ -71,7 +71,7 @@ namespace Events
 			}
 
 			auto settings = Settings::GetSingleton();
-			if (settings->EnableOnlyOnSM == true && settings->Survival_ModeEnabledShared->value == 0.0f) {
+			if (settings->EnableOnlyOnSM == true && settings->Survival_ModeEnabledShared == 0.0f) {
 				settings->menuFastTravel = false;
 				settings->needToShowRemoveMessage = false;
 				return RE::BSEventNotifyControl::kContinue;
@@ -82,7 +82,7 @@ namespace Events
 				if (settings->needToShowRemoveMessage) {
 
 					settings->needToShowRemoveMessage = false;
-					RE::DebugNotification(settings->TravelPackRemoveMessage.c_str(),"ITMGenericDownSD");
+					RE::DebugNotification(settings->TravelPackRemoveMessage.c_str(), "ITMGenericDownSD");
 					settings->menuFastTravel = false;
 				}
 			}
@@ -91,7 +91,12 @@ namespace Events
 				settings->menuFastTravel = false;
 			}
 			else if (a_event->menuName == RE::CursorMenu::MENU_NAME) {
-				FastTravelManager::EnableFastTravel(true);
+				if (REL::Module::IsAE()) {
+					FastTravelManager::EnableFastTravelAE(true);
+				}
+				else {
+					FastTravelManager::EnableFastTravelSE(nullptr, nullptr, nullptr, true);
+				}
 			}
 			else if (a_event->menuName == RE::BookMenu::MENU_NAME) {
 				auto settings = Settings::GetSingleton();

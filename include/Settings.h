@@ -19,7 +19,6 @@ public:
 		CSimpleIniA ini;
 		ini.SetUnicode();
 		ini.LoadFile(R"(.\Data\SKSE\Plugins\Journeyman.ini)");
-		const auto dataHandler = RE::TESDataHandler::GetSingleton();
 
 		std::string ft(ini.GetValue("","sNoTravelPackMessage",""));
 		std::string tpr(ini.GetValue("","sTravelPackRemoveMessage","FILL TRAVEL PACK MESSAGE IN INI"));
@@ -37,9 +36,15 @@ public:
 		RequiredItems = RE::TESDataHandler::GetSingleton()->LookupForm(RE::FormID(0x800), "Journeyman.esp")->As<RE::BGSListForm>();
 		MAG_IsFeatureLocked = RE::TESDataHandler::GetSingleton()->LookupForm(RE::FormID(0x80A), "Journeyman.esp")->As<RE::TESGlobal>();
 		UpdateFeatureLocked();
-		Survival_ModeEnabledShared = dataHandler->LookupForm(RE::FormID(0x314A), "Update.esm")->As<RE::TESGlobal>();
+		if(REL::Module::IsVR())
+		{
+			Survival_ModeEnabledShared = EnableOnlyOnSM;
+		}
+		else
+		{
+			Survival_ModeEnabledShared = RE::TESDataHandler::GetSingleton()->LookupForm(RE::FormID(0x314A), "Update.esm")->As<RE::TESGlobal>()->value;
+		}
 		logger::info("Settings loaded");
-
 	}
 
 	void UpdateFeatureLocked()
@@ -48,7 +53,7 @@ public:
 	}
 
 	RE::BGSListForm* RequiredItems;
-	RE::TESGlobal* Survival_ModeEnabledShared;
+	float Survival_ModeEnabledShared;
 	RE::TESGlobal* MAG_IsFeatureLocked;
 
 	bool needToShowRemoveMessage = false;
