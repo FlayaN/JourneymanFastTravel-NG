@@ -48,7 +48,7 @@ void InitListener(SKSE::MessagingInterface::Message* a_msg)
 
 SKSEPluginLoad(const SKSE::LoadInterface* a_skse)
 {
-#ifndef NDEBUG
+#ifdef DEBUG
     while (!REX::W32::IsDebuggerPresent()) {};
 #endif
     InitializeLogging();
@@ -65,11 +65,7 @@ SKSEPluginLoad(const SKSE::LoadInterface* a_skse)
 
     SKSE::AllocTrampoline(48);
 
-    if (!Hooks::Install())
-    {
-        logger::error("Install fast travel hooks failed");
-        return false;
-    }
+    Hooks::Install();
 
     auto messaging = SKSE::GetMessagingInterface();
     if (!messaging->RegisterListener(InitListener))

@@ -1,0 +1,1 @@
+.\CLI\Spriggit.CLI.exe serialize -i "Journeyman for VR - Patch.esp" -o "Journeyman for VR - Patch" -g SkyrimSE -p Spriggit.Yaml

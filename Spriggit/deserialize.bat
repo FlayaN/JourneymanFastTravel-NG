@@ -1,0 +1,1 @@
+.\CLI\Spriggit.CLI.exe deserialize -i "Journeyman for VR - Patch" -o "Journeyman for VR - Patch.esp"

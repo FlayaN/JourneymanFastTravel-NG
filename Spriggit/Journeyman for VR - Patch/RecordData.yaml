@@ -1,0 +1,16 @@
+SpriggitSource:
+  PackageName: 0.36.13
+  Version: ''
+ModKey: Journeyman for VR - Patch.esp
+GameRelease: SkyrimSE
+ModHeader:
+  Flags:
+  - Small
+  Stats:
+    Version: 1.7
+  Author: Flayan
+  MasterReferences:
+  - Master: Skyrim.esm
+    FileSize: 0
+  - Master: Journeyman.esp
+    FileSize: 0

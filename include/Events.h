@@ -19,33 +19,7 @@ namespace Events
 				return RE::BSEventNotifyControl::kContinue;
 			}
 
-			auto settings = Settings::GetSingleton();
-			if (settings->EnableOnlyOnSM == true && settings->Survival_ModeEnabledShared == 0.0f) {
-				settings->menuFastTravel = false;
-				return RE::BSEventNotifyControl::kContinue;
-			}
-
-			auto player = RE::PlayerCharacter::GetSingleton();
-			if (settings->menuFastTravel && !FastTravelManager::IsOnFlyingMount(player)) {
-				auto inv = player->GetInventory();
-				for (const auto& [item, data] : inv) {
-					if (settings->RequiredItems->HasForm(item->GetFormID())) {
-
-						player->RemoveItem(
-							item,
-							1,
-							RE::ITEM_REMOVE_REASON::kRemove,
-							nullptr,
-							nullptr
-						);
-
-						settings->needToShowRemoveMessage = true;
-						break;
-					}
-				}
-			}
-			settings->menuFastTravel = false;
-			return RE::BSEventNotifyControl::kContinue;
+			return FastTravelManager::PostFastTravel();
 		}
 
 		static void Register()
@@ -78,7 +52,6 @@ namespace Events
 			}
 
 			if (a_event->menuName == RE::MistMenu::MENU_NAME && !a_event->opening) {
-				auto settings = Settings::GetSingleton();
 				if (settings->needToShowRemoveMessage) {
 
 					settings->needToShowRemoveMessage = false;
@@ -87,27 +60,18 @@ namespace Events
 				}
 			}
 			else if (a_event->menuName == RE::TweenMenu::MENU_NAME && a_event->opening) {
-				auto settings = Settings::GetSingleton();
 				settings->menuFastTravel = false;
 			}
 			else if (a_event->menuName == RE::CursorMenu::MENU_NAME) {
-				if (REL::Module::IsAE()) {
-					FastTravelManager::EnableFastTravelAE(true);
-				}
-				else {
-					FastTravelManager::EnableFastTravelSE(nullptr, nullptr, nullptr, true);
-				}
+				FastTravelManager::EnableFastTravel(true);
 			}
 			else if (a_event->menuName == RE::BookMenu::MENU_NAME) {
-				auto settings = Settings::GetSingleton();
 				settings->menuFastTravel = false;
 			}
 			else if (a_event->menuName == RE::InventoryMenu::MENU_NAME) {
-				auto settings = Settings::GetSingleton();
 				settings->menuFastTravel = false;
 			}
 			else if (a_event->menuName == RE::DialogueMenu::MENU_NAME) {
-				auto settings = Settings::GetSingleton();
 				settings->menuFastTravel = false;
 			}
 

@@ -1,0 +1,23 @@
+FormKey: 000DBA:Journeyman.esp
+EditorID: MAG_JourneymanControllerAbility
+Name:
+  TargetLanguage: English
+  Value: Journeyman Controller Ability
+MenuDisplayObject: 0435A5:Skyrim.esm
+EquipmentType: 013F44:Skyrim.esm
+Description:
+  TargetLanguage: English
+  Value: ''
+Flags:
+- ManualCostCalc
+Type: Ability
+Effects:
+- BaseEffect: 000DB6:Journeyman.esp
+  Data: {}
+  Conditions:
+  - MutagenObjectType: ConditionFloat
+    Flags:
+    - OR
+    Data:
+      MutagenObjectType: GetGlobalValueConditionData
+      Global: 00080A:Journeyman.esp
