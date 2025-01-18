@@ -47,11 +47,11 @@ namespace Hooks {
 			auto settings = Settings::GetSingleton();
 			auto player = RE::PlayerCharacter::GetSingleton();
 
-			if ((!settings->EnableOnlyOnSM || settings->Survival_ModeEnabledShared == 1.0f) && !player->IsGodMode()) {
+			if (FastTravelManager::IsOnFlyingMount(a_actor)) {
+				return true;
+			}
 
-				if (FastTravelManager::IsOnFlyingMount(a_actor)) {
-					return true;
-				}
+			if ((!settings->EnableOnlyOnSM || settings->Survival_ModeEnabledShared == 1.0f) && !player->IsGodMode()) {
 
 				for (const auto& [item, data] : inv) {
 					if (settings->RequiredItems->HasForm(item->GetFormID())) {
@@ -67,16 +67,10 @@ namespace Hooks {
 				}
 			}
 			else {
-				return FastTravelManager::IsOnFlyingMount(a_actor) || funcVR(a_actor, a_errorText);
+				return funcVR(a_actor, a_errorText);
 			}
 
-			//If you get to here you didnt have the required item/s and you can't travel
-			if (a_errorText) {
-				RE::DebugMessageBox(settings->RequiredItemNotFoundMessage.c_str());
-			}
-			else {
-				RE::DebugNotification(settings->RequiredItemNotFoundMessage.c_str());
-			}
+			*a_errorText = strdup(settings->RequiredItemNotFoundMessage.c_str());
 			return false;
 		}
 		static inline REL::Relocation<decltype(thunkVR)> funcVR;
